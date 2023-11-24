@@ -2,8 +2,13 @@ from src.request import fetch_json
 url = 'https://inde.gov.br/api/catalogo/get'
 import json
 from collections import namedtuple
-catalogo_inde = []
+qtd_camadas: int = 0
+qtd_camadas_sem_metadados: int = 0
+incremento_catalogos: float = 1.0
+qtd_catalogos: float = 0.0
+falhas: list = []
 
+catalogo_inde = []
 catalogos_ibge = '''
 [{
         "descricao": "IBGE - Instituto Brasileiro de Geografia e Estatística - CGMAT",
