@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "gestao-dbdg"
+version = "0.1.0"
+description = ""
+authors = ["RogerioBorba <rogerio.borba17@gmail.com>"]
+readme = "README.md"
+packages = [{include = "gestao_dbdg"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+httpx = "^0.25.1"
+streamlit = "^1.28.1"
+certifi = "^2023.7.22"
+streamlit-card = "^0.0.61"
+aiohttp = "^3.8.6"
+streamlit-extras = "^0.3.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
