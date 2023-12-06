@@ -1,11 +1,11 @@
 import asyncio
 from collections import namedtuple
 import streamlit as st
-from src.inde import wms_capabilities
+from gestao_dbdg.src.inde_dbdg.inde import wms_capabilities
 from streamlit_extras.switch_page_button import switch_page
-from src.wms_get_capabilities import WMSCapabilities
-from src.wms_layer import WMSLayer
-from src.util_xml import  prefix_tag
+from gestao_dbdg.src.capabilities.wms_get_capabilities import WMSCapabilities
+from gestao_dbdg.src.layer.wms_layer import WMSLayer
+from gestao_dbdg.src.requests.util_xml import  prefix_tag
 wms_capability = None
 
 def layer_column_content(container, layer: WMSLayer):

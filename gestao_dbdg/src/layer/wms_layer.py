@@ -1,6 +1,6 @@
 
 import xml.etree.ElementTree as ET
-from src.util_xml import  prefix_tag
+from gestao_dbdg.src.requests.util_xml import  prefix_tag
 
 class LegendURL:
     def __init__(self, element: ET.Element, namespace: str= '', ns_attribute='{http://www.w3.org/1999/xlink}') -> None:
@@ -68,24 +68,17 @@ class WMSLayer:
         self.style = Style(self.ele_style, self.ns) if self.ele_style is not None else None
         self.metadados_urls: list[MetadataURL] =  [ MetadataURL(ele, self.ns) for ele in self.ele_metadata_list]
 
+    
     def name(self) -> str | None:
-        
         if self._name is not None:
             return self._name.text
-
+        
     def simple_name(self) -> str | None:
         if self.name() is not None:
             names = self.name().split(':')
             return names[1] if len(names) > 1 else names[0]
         
-    def title(self) -> str | None:
-        if self._title is not None:
-            return self._title.text
-    
-    def abstract(self) -> str | None:
-        if self._abstract is not None:
-            return self._abstract.text
-    
+        
     def type(self) -> str:
         return 'Layer' if self.name() else 'LayerGroup'
 

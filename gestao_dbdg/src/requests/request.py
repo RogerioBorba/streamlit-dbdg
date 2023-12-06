@@ -31,7 +31,8 @@ async def fetch_xml(url) -> str:
 
 async def get_xml(url: str):
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
+            #client_timeout = aiohttp.ClientTimeout(connect=5, sock_read=60)
+            async with session.get(url, timeout=60) as resp:
                 #print(resp.status)
                 text = await resp.text()
                # print(text )

@@ -1,13 +1,7 @@
-from src.request import fetch_json
+from gestao_dbdg.src.requests.request import fetch_json
 url = 'https://inde.gov.br/api/catalogo/get'
 import json
 from collections import namedtuple
-qtd_camadas: int = 0
-qtd_camadas_sem_metadados: int = 0
-incremento_catalogos: float = 1.0
-qtd_catalogos: float = 0.0
-falhas: list = []
-
 catalogo_inde = []
 catalogos_ibge = '''
 [{
@@ -145,15 +139,23 @@ async def catalogos_dbdg()-> list[dict] | dict:
         print(exc)
         return []
 
-def descricao_sigla_url(dict_catalogo_inde: dict) -> namedtuple:
+def descricao_sigla_url(dict_catalogo_inde: dict, ows_type_name: str) -> namedtuple:
     descricao: str = dict_catalogo_inde['descricao']
     sigla: str = descricao[:descricao.find('-')].strip()
-    url: str =  dict_catalogo_inde['wmsGetCapabilities']
+    url: str =  dict_catalogo_inde[ows_type_name]
     DescricaoSiglaUrl = namedtuple("DescricaoSiglaUrl", ["descricao", "sigla", "url"])
     return DescricaoSiglaUrl(descricao=descricao.strip(), sigla=sigla, url=url)
 
-async def wms_capabilities() -> list[namedtuple]:
+async def capabilities(ows_type_name: str) -> list[namedtuple]:
     if catalogo_inde:
-        return [ dic['wmsGetCapabilities'] for dic in  catalogo_inde]
+        return [ dic[ows_type_name] for dic in  catalogo_inde]
     list_dic = await catalogos_dbdg()
-    return [ descricao_sigla_url(dic) for dic in list_dic]
+    list_dict: list[dict] = [ dic for dic in list_dic if dic[ows_type_name] is not None ]
+    return [ descricao_sigla_url(dic, ows_type_name) for dic in list_dict]
+
+async def wms_capabilities() -> list[namedtuple]:
+    return await capabilities('wmsGetCapabilities')
+
+async def wfs_capabilities() -> list[namedtuple]:
+    return await capabilities('wfsGetCapabilities')
+    
