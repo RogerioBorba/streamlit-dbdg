@@ -10,8 +10,6 @@ class OWSBaseLayer:
         self._abstract: ET.Element = element.find(prefix_tag('Abstract', self.ns))
         self.ele_metadata_list: list[ET.Element] = element.findall(prefix_tag('MetadataURL', self.ns))
         self.ele_keyword_list: ET.Element = element.find(prefix_tag('KeywordList', self.ns))
-        self.ele_crs_list: list[ET.Element] = element.findall(prefix_tag('CRS', self.ns))
-        self.ele_style: ET.Element = element.find(prefix_tag('Style', self.ns))
         
     def name(self) -> str | None:
         if self._name is not None:

@@ -1,9 +1,17 @@
-from gestao_dbdg.src.capabilities.capabililties_base import CapabilitiesBase
-from gestao_dbdg.src.layer.base_layer import OWSBaseLayer
+from gestao_dbdg.src.capabilities.wfs_get_capabilities import WFSCapabilities
+from gestao_dbdg.src.wfs.wfs_layer import WFSLayer
+from gestao_dbdg.src.wfs.decribe_feature_type import WFSDescribeFeatureType
 import streamlit as st
 import asyncio
 
-def layer_column_content(container, layer: OWSBaseLayer):
+async def create_column(url: str)-> None:
+    sigla: str = url[8:].split('/')[0]
+    wms_capabilities = WFSCapabilities(url, sigla, url)
+    for col in st.columns(1):
+        await create_column_content(col, wms_capabilities)
+
+
+def layer_column_content(container, layer: WFSCapabilities):
     with container:
         
         st.caption(f"Nome: :green[{layer.simple_name()}]")
@@ -20,14 +28,14 @@ def layer_column_content(container, layer: OWSBaseLayer):
         #print(layer.url_metadado_links())
     return container
 
-def create_layers_columns(layers: list[OWSBaseLayer]) -> None:
+def create_layers_columns(layers: list[WFSLayer]) -> None:
     size_of_layers = len(layers)
     iterator = size_of_layers// 3 + ( 0 if size_of_layers % 3 == 0  else 1)
     idx_layers: int = 0
     for i in range(iterator):
         for col in st.columns(3):
             if idx_layers < size_of_layers:
-                layer: OWSBaseLayer = layers[idx_layers]
+                layer: WFSLayer = layers[idx_layers]
                 layer_column_content(col, layer)
                 idx_layers += 1
 
@@ -52,10 +60,10 @@ async def create_column_content(container, capabilities):
         st.text(f"Qtd sem resumo: {capabilities.qtd_camadas_sem_resumo}")
         if  not capabilities.failed:
             st.button("Detalhe", key=capabilities.descricao, on_click= create_layers_columns, args=[capabilities.layers()])
-            st.session_state['ows_capability'] = capabilities
+            st.session_state['wfs_capability'] = capabilities
     return container
 
-async def create_columns(l_capabilities: list[CapabilitiesBase]) -> None:
+async def create_columns(l_capabilities: list[WFSCapabilities]) -> None:
     size_of_capabilities = len(l_capabilities)
     iterator = size_of_capabilities // 3 + ( 0 if size_of_capabilities % 3 == 0  else 1)
     idx_capabilities: int = 0
@@ -70,3 +78,5 @@ async def create_columns(l_capabilities: list[CapabilitiesBase]) -> None:
                 tasks.append(task)    
                 idx_capabilities += 1
     await asyncio.gather(*tasks)
+
+

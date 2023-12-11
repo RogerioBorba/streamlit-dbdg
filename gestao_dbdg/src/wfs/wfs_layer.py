@@ -3,6 +3,7 @@ from gestao_dbdg.src.requests.util_xml import  prefix_tag
 from gestao_dbdg.src.layer.base_layer import OWSBaseLayer
 from collections import namedtuple
 MetadataUrl = namedtuple("MetadataUrl", ["type", "url", "format"])
+
 class WFSLayer(OWSBaseLayer):
     def __init__(self, element: ET.Element, namespace: str= '') -> None:
         self.element: ET.Element = element

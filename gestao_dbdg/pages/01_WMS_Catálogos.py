@@ -4,7 +4,7 @@ import streamlit as st
 from gestao_dbdg.src.inde_dbdg.inde import wms_capabilities
 from streamlit_extras.switch_page_button import switch_page
 from gestao_dbdg.src.capabilities.wms_get_capabilities import WMSCapabilities
-from gestao_dbdg.src.layer.wms_layer import WMSLayer
+from gestao_dbdg.src.wms.wms_layer import WMSLayer
 from gestao_dbdg.src.requests.util_xml import  prefix_tag
 wms_capability = None
 
@@ -59,6 +59,7 @@ async def create_column_content(container, wms_get_capabilities):
         st.text(f"Qtd de camadas: {wms_get_capabilities.qtd_camadas}")
         st.text(f"Qtd sem metadados: {wms_get_capabilities.qtd_camadas_sem_metadados}")
         st.text(f"Qtd sem palavras chaves: {wms_get_capabilities.qtd_camadas_sem_palavras_chaves}")
+        st.text(f"Qtd sem resumo: {wms_get_capabilities.qtd_camadas_sem_resumo}")
         #st.text(wms_get_capabilities.xml)
         if  not wms_get_capabilities.failed:
             st.button("Detalhe", key=wms_get_capabilities.descricao, on_click= layer_detail, args=[wms_get_capabilities])

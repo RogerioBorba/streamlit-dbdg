@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 from ..requests.request import get_xml
 import time
-from gestao_dbdg.src.layer.wms_layer import WMSLayer
+from gestao_dbdg.src.wms.wms_layer import WMSLayer
 from gestao_dbdg.src.capabilities.capabililties_base import CapabilitiesBase
 
 class WMSCapabilities(CapabilitiesBase):
@@ -65,8 +65,19 @@ class WMSCapabilities(CapabilitiesBase):
         ele_layers = [ ele_layer for ele_layer in ele_layers if ele_layer.find(self.prefix_tag('MetadataURL')) == None]
         self.qtd_camadas_sem_metadados = len(ele_layers)
             
+
+    def set_qtd_camadas_sem_resumo(self)-> None:
+        ele_layers: list = self.layers_from_tree()
+        #ele_layers = [ ele_layer for ele_layer in ele_layers if not (ele_layer.find(self.prefix_tag('Abstract')) != None and ele_layer.find(self.prefix_tag('Abstract')).text != '') ]
+        qt_sem_resumo = 0
+        for ele_layer in ele_layers:
+            ele = ele_layer.find(self.prefix_tag('Abstract'))
+            if  not (ele is not None and ele.text is not None):
+                qt_sem_resumo += 1
+        self.qtd_camadas_sem_resumo = qt_sem_resumo #len(ele_layers)
+    
+
     def set_qtd_camadas_sem_palavras_chaves(self)-> None:
-        res: ET.Element = self.ele_capability().find(self.prefix_tag('Layer'))
         ele_layers: list = self.layers_from_tree()
         count: int = 0
         for ele_layer in ele_layers:
@@ -85,3 +96,5 @@ class WMSCapabilities(CapabilitiesBase):
         self.set_qtd_camadas()
         self.set_qtd_camadas_sem_metadados()
         self.set_qtd_camadas_sem_palavras_chaves()
+        self.set_qtd_camadas_sem_resumo()
+    

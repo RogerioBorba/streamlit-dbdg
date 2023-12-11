@@ -78,6 +78,9 @@ class WMSLayer:
             names = self.name().split(':')
             return names[1] if len(names) > 1 else names[0]
         
+    def title(self) -> str | None:
+        if self._title is not None:
+            return self._title.text
         
     def type(self) -> str:
         return 'Layer' if self.name() else 'LayerGroup'
@@ -94,3 +97,9 @@ class WMSLayer:
 
     def crss(self)-> list[str]:
         return [ ele_crs.text for ele_crs in self.ele_crs_list]
+
+
+    def abstract(self) -> str | None:
+        if self._abstract is not None:
+            return self._abstract.text
+    

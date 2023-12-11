@@ -1,14 +1,14 @@
 import xml.etree.ElementTree as ET
 from ..requests.request import get_xml
 import time
-from gestao_dbdg.src.layer.wfs_layer import WFSLayer
+from gestao_dbdg.src.wfs.wfs_layer import WFSLayer
 from gestao_dbdg.src.capabilities.capabililties_base import CapabilitiesBase
 
 class WFSCapabilities(CapabilitiesBase):
     def __init__(self, descricao: str, sigla: str, url: str) -> None:
         super().__init__(descricao, sigla, url)
         self.is_layer_group: bool = False
-        self._elements_from_tree: list[ET.Element] | None = None
+        self._elements: list[ET.Element] | None = None
     
     
     def version(self)-> str: 

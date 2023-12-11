@@ -2,7 +2,7 @@ import asyncio
 from collections import namedtuple
 from gestao_dbdg.src.inde_dbdg.inde import wfs_capabilities
 from gestao_dbdg.src.capabilities.wfs_get_capabilities import WFSCapabilities
-from gestao_dbdg.src.components.ows_capabilities import create_columns
+from gestao_dbdg.src.components.wfs_capabilities import create_columns
 import streamlit as st
 
 

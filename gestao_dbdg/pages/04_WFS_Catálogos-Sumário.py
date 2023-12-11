@@ -1,13 +1,13 @@
 import asyncio
 import streamlit as st
-from gestao_dbdg.src.capabilities.wms_get_capabilities import WMSCapabilities
+from gestao_dbdg.src.capabilities.wfs_get_capabilities import WFSCapabilities
 from collections import namedtuple
-from gestao_dbdg.src.inde_dbdg.inde import wms_capabilities
+from gestao_dbdg.src.inde_dbdg.inde import wfs_capabilities
 #print(qtd_camadas_sem_metadados)
 #print(qtd_camadas)
-def container_content(container, wms_capa = None):
+def container_content(container, wfs_capa = None):
     with container:
-        descricao = wms_capa.descricao if wms_capa else ''
+        descricao = wfs_capa.descricao if wfs_capa else ''
         st.text(f"Total de camadas processadas por selecionadas {st.session_state.qtd_total_catalogos_processados}/{st.session_state.qtd_total_catalogos_selecionados}")
         st.progress(st.session_state.qtd_catalogos, descricao)
         st.caption(f"Total de camadas: :green[{st.session_state.qtd_camadas}]")
@@ -16,20 +16,20 @@ def container_content(container, wms_capa = None):
         st.caption(f"Falhas em: :red[{st.session_state.falhas}]")
         
 
-async def summary_wms_capabilities(placeholder, wms_capabilities: WMSCapabilities):
+async def summary_wms_capabilities(placeholder, wfs_capabilities: WFSCapabilities):
     
     try:
-        await wms_capabilities.execute_request()
-        st.session_state.qtd_camadas += wms_capabilities.qtd_camadas
-        st.session_state.qtd_camadas_sem_metadados += wms_capabilities.qtd_camadas_sem_metadados
-        st.session_state.qtd_camadas_sem_resumo += wms_capabilities.qtd_camadas_sem_resumo
+        await wfs_capabilities.execute_request()
+        st.session_state.qtd_camadas += wfs_capabilities.qtd_camadas
+        st.session_state.qtd_camadas_sem_metadados += wfs_capabilities.qtd_camadas_sem_metadados
+        st.session_state.qtd_camadas_sem_metadados += wfs_capabilities.qtd_camadas_sem_resumo
 
     except Exception as exc:
         st.session_state.qtd_catalogos += st.session_state.incremento_catalogos
-        print(f"falha em: {wms_capabilities.descricao}")
+        print(f"falha em: {wfs_capabilities.descricao}")
         print(f"falha: {exc}")
-        wms_capabilities.failed = True
-        st.session_state.falhas.append(wms_capabilities.descricao)
+        wfs_capabilities.failed = True
+        st.session_state.falhas.append(wfs_capabilities.descricao)
     finally:
         st.session_state.qtd_catalogos += st.session_state.incremento_catalogos
         st.session_state.qtd_total_catalogos_processados += 1
@@ -38,12 +38,12 @@ async def summary_wms_capabilities(placeholder, wms_capabilities: WMSCapabilitie
             st.session_state.qtd_catalogos = 1.0
         placeholder.empty()
         container = placeholder.container()
-        container_content(container, wms_capabilities)
+        container_content(container, wfs_capabilities)
 
 
 async def create_content(lista_descricao_sigla_url: list[tuple[str,str]], descricoes_escolhidas: list[str])-> None:
     l_descricao_sigla_url : list[tuple[str, str,str]] = [ (descricao, sigla, url) for descricao, sigla, url in lista_descricao_sigla_url if descricao in descricoes_escolhidas]
-    l_wms_get_capabilities: list[WMSCapabilities] = [ WMSCapabilities(descricao, sigla, url) for descricao, sigla, url in l_descricao_sigla_url]
+    l_wms_get_capabilities: list[WFSCapabilities] = [ WFSCapabilities(descricao, sigla, url) for descricao, sigla, url in l_descricao_sigla_url]
     tasks: list = []
     st.session_state.falhas = []
     size: int = len(l_wms_get_capabilities)
@@ -62,20 +62,20 @@ async def create_content(lista_descricao_sigla_url: list[tuple[str,str]], descri
 def initialize_session():
     st.session_state.qtd_camadas = 0
     st.session_state.qtd_camadas_sem_metadados = 0
+    st.session_state.qtd_camadas_sem_resumo = 0
     st.session_state.falhas = []
     st.session_state.incremento_catalogos = 0.0
     st.session_state.qtd_catalogos = 0.0
     st.session_state.qtd_total_catalogos_selecionados = 0
     st.session_state.qtd_total_catalogos_processados = 0
-    st.session_state.qtd_camadas_sem_resumo = 0
     
 async def main():
-    st.set_page_config( page_title="WMS - Sumário de Catálogos", page_icon="👋", layout="wide" )
+    st.set_page_config( page_title="WFS - Sumário de Catálogos", page_icon="👋", layout="wide" )
     initialize_session()
     descricoes_escolhidas = []
-    list_descricao_sigla_url: list[namedtuple] = await wms_capabilities()
+    list_descricao_sigla_url: list[namedtuple] = await wfs_capabilities()
     descricoes: list[str] = [descricao_sigla_url.descricao for descricao_sigla_url in list_descricao_sigla_url]
-    header = st.sidebar.header("Sumário catálogos WMS")
+    header = st.sidebar.header("Sumário catálogos WFS")
     selecionar_todas = st.sidebar.checkbox('Selecionar todas instituições')
     if selecionar_todas:
         descricoes_escolhidas = descricoes
