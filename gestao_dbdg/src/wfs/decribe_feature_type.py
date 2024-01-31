@@ -19,7 +19,7 @@ class WFSDescribeFeatureType:
         self.xml = await get_xml(self.url)
         elapsed = time.perf_counter() - s
         self.tempo_requisicao = round(elapsed, 2)
-        self.set_qtd_feicoes()
+        #self.set_qtd_feicoes()
         
     def __str__(self) -> str:
         return self.descricao

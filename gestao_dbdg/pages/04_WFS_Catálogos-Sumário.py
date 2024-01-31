@@ -69,6 +69,7 @@ def initialize_session():
     st.session_state.qtd_total_catalogos_selecionados = 0
     st.session_state.qtd_total_catalogos_processados = 0
     
+
 async def main():
     st.set_page_config( page_title="WFS - Sumário de Catálogos", page_icon="👋", layout="wide" )
     initialize_session()
@@ -82,6 +83,7 @@ async def main():
     options = st.sidebar.multiselect('-----', descricoes, descricoes_escolhidas)
     btn = st.sidebar.button('Executar')
     if btn:
-       await create_content(list_descricao_sigla_url, options)
+        await create_content(list_descricao_sigla_url, options)
+
        
 asyncio.run(main())

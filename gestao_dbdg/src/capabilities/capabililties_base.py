@@ -57,7 +57,7 @@ class CapabilitiesBase:
     async def execute_request(self)-> None:
         s = time.perf_counter()
         self.xml = await get_xml(self.url)
-        print(f"xml: {self.url}")
+        #print(f"xml: {self.url}")
         elapsed = time.perf_counter() - s
         self.tempo_requisicao = round(elapsed, 2)
         self.set_qtd_camadas()

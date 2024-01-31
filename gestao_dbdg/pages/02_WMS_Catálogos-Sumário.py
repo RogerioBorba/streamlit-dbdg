@@ -58,6 +58,7 @@ async def create_content(lista_descricao_sigla_url: list[tuple[str,str]], descri
         task = asyncio.create_task(summary_wms_capabilities(placeholder, wms_capabilities))
         tasks.append(task)    
     await asyncio.gather(*tasks)
+
     
 def initialize_session():
     st.session_state.qtd_camadas = 0

@@ -107,27 +107,15 @@ catalogos_ibge = '''
             "wcsGetCapabilities": "https://geoservicos.ibge.gov.br/geoserver/PNADC/ows?service=wcs&request=GetCapabilities&version=1.3.0",
             "url_metadados": "https://metadadosgeo.ibge.gov.br/geonetwork_ibge",
             "cswGetCapabilities": "https://metadadosgeo.ibge.gov.br/geonetwork_ibge/srv/por/csw?service=CSW&version=2.0.2&request=GetCapabilities"
-        },
-        
-        {
-            "descricao": "IBGE - Objetivos de Desenvolvimento Sustentável - ODS",
-            "sigla": "IBGE/ODS",
-            "url": "https://geoservicos.ibge.gov.br/geoserver/ODS/ows",
-            "wmsAvailable": true,
-            "wfsAvailable": true,
-            "wcsAvailable": true,
-            "wmsGetCapabilities": "https://geoservicos.ibge.gov.br/geoserver/ODS/ows?service=wms&request=GetCapabilities&version=1.3.0",
-            "wfsGetCapabilities": "https://geoservicos.ibge.gov.br/geoserver/ODS/ows?service=wfs&request=GetCapabilities&version=1.3.0",
-            "wcsGetCapabilities": "https://geoservicos.ibge.gov.br/geoserver/ODS/ows?service=wcs&request=GetCapabilities&version=1.3.0",
-            "url_metadados": "https://metadadosgeo.ibge.gov.br/geonetwork_ibge",
-            "cswGetCapabilities": "https://metadadosgeo.ibge.gov.br/geonetwork_ibge/srv/por/csw?service=CSW&version=2.0.2&request=GetCapabilities"
-            }
+        }
 ]'''
 async def catalogos_dbdg()-> list[dict] | dict:
     try:
         catalogos : list = []
         catalogo_inde = await fetch_json(url)
         for catalogo in catalogo_inde:
+            if catalogo in catalogos:
+                continue
             if catalogo['descricao'].startswith('IBGE -'):
                 catalogos = catalogos + json.loads(catalogos_ibge)
             
