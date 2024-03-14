@@ -89,8 +89,10 @@ class WMSCapabilities(CapabilitiesBase):
         self.qtd_camadas_sem_palavras_chaves = count
     
     async def execute_request(self)-> None:
+        print(self.url)
         s = time.perf_counter()
         self.xml = await get_xml(self.url)
+
         elapsed = time.perf_counter() - s
         self.tempo_requisicao = round(elapsed, 2)
         self.set_qtd_camadas()

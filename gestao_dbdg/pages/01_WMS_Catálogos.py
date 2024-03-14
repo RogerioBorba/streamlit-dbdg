@@ -16,7 +16,7 @@ def layer_column_content(container, layer: WMSLayer):
         st.markdown(f":gray[Resumo:] {layer.abstract() or 'Não há resumo'}")
         st.markdown(f":gray[Palavras-chaves:] {','.join(layer.palavras_chaves()) or 'sem palavras-chaves'}")
         st.markdown(f":gray[CRSs:] {','.join(layer.crss())}")
-        st.markdown(f":gray[Estilo:] {layer.style.simple_name()}")
+        st.markdown(f":gray[Estilo:] {layer.style.simple_name() if layer.style else 'sem estilo'}")
         if layer.metadados_urls:
             for metadata_url in layer.metadados_urls:
                 md = ":gray[Metadado:] [link](%s)  tipo: %s" % (metadata_url.url(), metadata_url.type())

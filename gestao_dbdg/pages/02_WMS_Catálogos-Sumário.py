@@ -41,9 +41,10 @@ async def summary_wms_capabilities(placeholder, wms_capabilities: WMSCapabilitie
         container_content(container, wms_capabilities)
 
 
-async def create_content(lista_descricao_sigla_url: list[tuple[str,str]], descricoes_escolhidas: list[str])-> None:
-    l_descricao_sigla_url : list[tuple[str, str,str]] = [ (descricao, sigla, url) for descricao, sigla, url in lista_descricao_sigla_url if descricao in descricoes_escolhidas]
-    l_wms_get_capabilities: list[WMSCapabilities] = [ WMSCapabilities(descricao, sigla, url) for descricao, sigla, url in l_descricao_sigla_url]
+async def create_content(lista_descricao_sigla_url: list[tuple[str,str]], descricoes_escolhidas: list[str]) -> None:
+
+    l_wms_get_capabilities: list[WMSCapabilities] = [WMSCapabilities(descricao, sigla, url) for descricao, sigla, url in
+                                                     lista_descricao_sigla_url if descricao in descricoes_escolhidas]
     tasks: list = []
     st.session_state.falhas = []
     size: int = len(l_wms_get_capabilities)

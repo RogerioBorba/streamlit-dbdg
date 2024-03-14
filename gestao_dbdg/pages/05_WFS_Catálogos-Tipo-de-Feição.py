@@ -38,7 +38,8 @@ def lista_complex_type(xml: str) -> list:
 def describe_complex_type(container, complex_type, nsmap):
     with container:
         type_name = complex_type.get('name')
-        st.caption(f'Tipo da Feição: {type_name[:-4]}')
+        tipo_fei: str = f'Nome: {type_name[:-4]}'
+        st.markdown(f'<h6> {tipo_fei} </h6>', unsafe_allow_html=True)
         # Count attributes
         attributes = complex_type.findall('.//xsd:element', namespaces=nsmap)
         num_attributes = len(attributes)
