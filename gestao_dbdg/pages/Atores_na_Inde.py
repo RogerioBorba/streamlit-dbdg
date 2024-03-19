@@ -24,21 +24,22 @@ async def main():
     df:pd.DataFrame = await get_dataframe()
     df_filtered: pd.DataFrame = df
     status = df['status'].unique()
+    esferas = df['esfera'].unique()
     status_escolhidos = status
     selecionar_todas = st.sidebar.checkbox('Selecionar todos status')
-
+    esferas_escolhidas = esferas
     if selecionar_todas:
         status_escolhidos = status
 
-    options = st.sidebar.multiselect('-----', status, status_escolhidos)
-    if options:
-        df_filtered = df.query(f"status in ({options})")
+    options_status = st.sidebar.multiselect('-----', status, status_escolhidos)
+    options_esfera = st.sidebar.multiselect('-----', esferas, esferas_escolhidas)
+    if options_status:
+        df_filtered = df.query(f"status in ({options_status}) and esfera in ({options_esfera})")
     st.dataframe(df_filtered)
     st.write(f"Total selecionado: {len(df_filtered)}")
 
-
     c1, = st.columns(1)
-    fig = px.bar(df, x= 'status', color='esfera')
+    fig = px.bar(df_filtered, x= 'status', color='esfera')
     c1.plotly_chart(fig)
     btn = st.sidebar.button('Executar')
     if btn:
