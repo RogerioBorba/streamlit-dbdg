@@ -1,7 +1,7 @@
 import asyncio
 from collections import namedtuple
 import streamlit as st
-from gestao_dbdg.src.inde_dbdg.inde import wms_capabilities
+from gestao_dbdg.src.inde_dbdg.inde import wms_capabilities_catalogo_inde
 from streamlit_extras.switch_page_button import switch_page
 from gestao_dbdg.src.capabilities.wms_get_capabilities import WMSCapabilities
 from gestao_dbdg.src.wms.wms_layer import WMSLayer
@@ -99,7 +99,7 @@ async def main():
     st.set_page_config( page_title="WMS - Capabilities", page_icon="👋", layout="wide" )
     #st.title("WMS GetCapabilities")
     descricoes_escolhidas = []
-    list_descricao_sigla_url: list[namedtuple] = await wms_capabilities()
+    list_descricao_sigla_url: list[namedtuple] = await wms_capabilities_catalogo_inde()
     descricoes: list[str] = [descricao_sigla_url.descricao for descricao_sigla_url in list_descricao_sigla_url]
 
     header = st.sidebar.header("Instituições")

@@ -2,7 +2,7 @@ import asyncio
 import streamlit as st
 from gestao_dbdg.src.capabilities.wms_get_capabilities import WMSCapabilities
 from collections import namedtuple
-from gestao_dbdg.src.inde_dbdg.inde import wms_capabilities
+from gestao_dbdg.src.inde_dbdg.inde import wms_capabilities_catalogo_inde
 #print(qtd_camadas_sem_metadados)
 #print(qtd_camadas)
 def container_content(container, wms_capa = None):
@@ -16,7 +16,7 @@ def container_content(container, wms_capa = None):
         st.caption(f"Falhas em: :red[{st.session_state.falhas}]")
         
 
-async def summary_wms_capabilities(placeholder, wms_capabilities: WMSCapabilities):
+async def summary_wms_capabilities(placeholder, wms_capabilities_catalogo_inde: WMSCapabilities):
     
     try:
         await wms_capabilities.execute_request()
@@ -75,7 +75,7 @@ async def main():
     st.set_page_config( page_title="WMS - Sumário de Catálogos", page_icon="👋", layout="wide" )
     initialize_session()
     descricoes_escolhidas = []
-    list_descricao_sigla_url: list[namedtuple] = await wms_capabilities()
+    list_descricao_sigla_url: list[namedtuple] = await wms_capabilities_catalogo_inde()
     descricoes: list[str] = [descricao_sigla_url.descricao for descricao_sigla_url in list_descricao_sigla_url]
     header = st.sidebar.header("Sumário catálogos WMS")
     selecionar_todas = st.sidebar.checkbox('Selecionar todas instituições')

@@ -55,13 +55,15 @@ class MetadataURL:
         return online_resource.get(f"{self.ns_attribute}href")
     
 class WMSLayer:
-    def __init__(self, element: ET.Element, namespace: str= '') -> None:
+    def __init__(self, element: ET.Element, namespace: str= '', url: str = None) -> None:
         self.element: ET.Element = element
         self.ns = namespace
+        self.url = url
         self._title: ET.Element = element.find(prefix_tag('Title', self.ns))
         self._name: ET.Element = element.find(prefix_tag('Name', self.ns))
         self._abstract: ET.Element = element.find(prefix_tag('Abstract', self.ns))
         self.ele_metadata_list: list[ET.Element] = element.findall(prefix_tag('MetadataURL', self.ns))
+        self.ele_layer_list: list[ET.Element] = element.findall(prefix_tag('Layer', self.ns))
         self.ele_keyword_list: ET.Element = element.find(prefix_tag('KeywordList', self.ns))
         self.ele_crs_list: list[ET.Element] = element.findall(prefix_tag('CRS', self.ns))
         self.ele_style: ET.Element = element.find(prefix_tag('Style', self.ns))
@@ -83,7 +85,10 @@ class WMSLayer:
             return self._title.text
         
     def type(self) -> str:
-        return 'Layer' if self.name() else 'LayerGroup'
+        return 'Layer' if self.name() and not self.ele_layer_list else 'LayerGroup'
+
+    def wms_layers(self) -> list:
+        return [WMSLayer(ele_layer, self.ns) for ele_layer in self.ele_layer_list]
 
     def palavras_chaves(self) -> list[str]:
         if self.ele_keyword_list:

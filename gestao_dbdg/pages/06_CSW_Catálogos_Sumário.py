@@ -40,7 +40,7 @@ async def create_content_to(container, dict_csw: dict):
 async def create_columns(instituicoes_escolhidas) -> None:
     l_dic: list[dict] = [dic for dic in csw_enderecos if dic['descricao'] in instituicoes_escolhidas]
     size_of = len(l_dic)
-    iterator = size_of // 3 + (0 if size_of % 3 == 0 else 1)
+    iterator = (size_of // 3) + (0 if size_of % 3 == 0 else 1)
     idx: int = 0
     tasks = []
     for i in range(iterator):

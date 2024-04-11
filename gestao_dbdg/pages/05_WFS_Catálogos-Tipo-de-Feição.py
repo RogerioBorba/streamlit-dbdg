@@ -1,7 +1,7 @@
 import asyncio
 from collections import namedtuple
 from io import StringIO
-from gestao_dbdg.src.inde_dbdg.inde import wfs_capabilities
+from gestao_dbdg.src.inde_dbdg.inde import wfs_capabilities_catalogo_inde
 from gestao_dbdg.src.capabilities.wfs_get_capabilities import WFSCapabilities
 from gestao_dbdg.src.wfs.wfs_layer import WFSLayer
 import streamlit as st
@@ -198,7 +198,7 @@ async def create_columns(l_capabilities: list[WFSCapabilities]) -> None:
 async def main():
     st.set_page_config(page_title="WFS - Tipos de feição", page_icon="👋", layout="wide")
     descricoes_escolhidas = []
-    list_descricao_sigla_url: list[namedtuple] = await wfs_capabilities()
+    list_descricao_sigla_url: list[namedtuple] = await wfs_capabilities_catalogo_inde()
     descricoes: list[str] = [descricao_sigla_url.descricao for descricao_sigla_url in list_descricao_sigla_url]
     selecionar_todas = st.sidebar.checkbox('Selecionar todas instituições')
     if selecionar_todas:

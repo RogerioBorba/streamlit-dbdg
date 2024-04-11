@@ -2,7 +2,7 @@ import asyncio
 import streamlit as st
 from gestao_dbdg.src.capabilities.wfs_get_capabilities import WFSCapabilities
 from collections import namedtuple
-from gestao_dbdg.src.inde_dbdg.inde import wfs_capabilities
+from gestao_dbdg.src.inde_dbdg.inde import wfs_capabilities_catalogo_inde
 #print(qtd_camadas_sem_metadados)
 #print(qtd_camadas)
 def container_content(container, wfs_capa = None):
@@ -75,7 +75,7 @@ async def main():
     st.set_page_config( page_title="WFS - Sumário de Catálogos", page_icon="👋", layout="wide" )
     initialize_session()
     descricoes_escolhidas = []
-    list_descricao_sigla_url: list[namedtuple] = await wfs_capabilities()
+    list_descricao_sigla_url: list[namedtuple] = await wfs_capabilities_catalogo_inde()
     descricoes: list[str] = [descricao_sigla_url.descricao for descricao_sigla_url in list_descricao_sigla_url]
     selecionar_todas = st.sidebar.checkbox('Selecionar todas instituições')
     if selecionar_todas:
