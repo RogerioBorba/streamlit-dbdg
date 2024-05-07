@@ -30,9 +30,10 @@ async def get_dataframe_atores_representantes_capacitados(conn: duckdb.DuckDBPyC
     sql: str = """
     SELECT instituicao, 
             count(turma)::INTEGER AS 'qtd_turma', 
-            sum(qtd_treinado)::INTEGERgit AS 'qtd_treinado', 
-            esfera 
-            FROM (SELECT ator.nom_instituicao AS 'instituicao',turma.nom_turma AS 'turma',  COUNT(turma.nom_turma) AS 'qtd_treinado', 
+            sum(qtd_treinado)::INTEGER AS 'treinados', 
+            esfera,
+            ano 
+            FROM (SELECT ator.nom_instituicao AS 'instituicao',turma.nom_turma AS 'turma',  COUNT(turma.nom_turma) AS 'qtd_treinado', YEAR(turma.dat_inicio)::INTEGER as 'ano' , 
             CASE 
                  WHEN ator.ind_esfera = 1 THEN 'Estadual' 
                  WHEN ator.ind_esfera = 2 THEN 'Federal'
@@ -85,32 +86,32 @@ async def main():
     #options = st.sidebar.multiselect('-----', descricoes, descricoes_escolhidas)
     conn = init_duckdb_connnection()
     df_ator_rep = await get_dataframe_atores_representantes_capacitados(conn)
-    st.write(
-        f"Atores capacitados: {len(df_ator_rep['instituicao'].unique())}. Quantidade total de participantes: {sum(df_ator_rep['qtd_treinado'])}")
-    st.dataframe(df_ator_rep, use_container_width=True)
-    df: pd.DataFrame = await get_dataframe_atores_capacitados(conn)
-    esferas = df['esfera'].unique()
+    esferas = df_ator_rep['esfera'].unique()
     esferas_escolhidas = esferas
     options_esfera = st.sidebar.multiselect('-----', esferas, esferas_escolhidas)
-    df_filtered = df.query(f"esfera in ({options_esfera})")
+    df_filtered = df_ator_rep.query(f"esfera in ({options_esfera})")
     st.write(
-        f"Atores capacitados: {len(df_filtered['instituicao'].unique())}. Quantidade total de participantes: {sum(df_filtered['qtd_participante'])}")
+        f"Atores capacitados: {len(df_filtered['instituicao'].unique())}. Quantidade total de participantes: {sum(df_filtered['treinados'])}")
     st.dataframe(df_filtered, use_container_width=True)
     st.write(" ")
     st.write("Atores capacitados por ano")
-    df1: pd.DataFrame = await get_dataframe_atores_capacitados_por_ano(conn)
+    df1: pd.DataFrame = df_filtered
+    #df1['quantidade_treinado'] = 0
+    df_ano_qtd = df_filtered.groupby('ano')['treinados'].sum()
+    df_ano_qtd['ano_treinamento'] = df_ano_qtd.index
+
     #st.dataframe(df1, column_config={"ano": st.column_config.NumberColumn(format="%d")})
     #print(df1['ano'].dtype)
-    fig1 = px.bar(df1, x='ano', y='numero_de_participantes')
+    df1 = df_filtered.groupby(["ano"]).sum('treinados')
+    df1 = df1.reset_index()
+    fig1 = px.bar(df1, x='ano', y='treinados')
 
     st.plotly_chart(fig1)
     st.write("Turmas por ano")
     df2: pd.DataFrame = await get_dataframe_turmas_por_ano(conn)
     fig2 = px.bar(df2, x='ano', y='qtd_turma')
-
     st.plotly_chart(fig2)
-    btn = st.sidebar.button('Executar')
+
     conn.close()
-    if btn:
-        pass
+
 asyncio.run(main())

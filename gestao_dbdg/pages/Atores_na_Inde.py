@@ -54,6 +54,7 @@ async def main():
     df_filtered: pd.DataFrame = df
     status = df['status'].unique()
     esferas = df['esfera'].unique()
+    modalidades = df['modalidade'].unique()
     status_escolhidos = status
     selecionar_todas = st.sidebar.checkbox('Selecionar todos status')
     esferas_escolhidas = esferas
@@ -62,16 +63,17 @@ async def main():
 
     options_status = st.sidebar.multiselect('-----', status, status_escolhidos)
     options_esfera = st.sidebar.multiselect('-----', esferas, esferas_escolhidas)
+    options_modalidade = st.sidebar.multiselect('-----', modalidades, modalidades)
     if options_status:
         df_filtered = df.query(f"status in ({options_status}) and esfera in ({options_esfera})")
+    if options_modalidade:
+        print(f"options_modalidade changed: {options_modalidade}")
+        df_filtered = df_filtered.query(f"modalidade in ({options_modalidade})")
+
     st.write(f"Total de instituições em contato com o DBDG/INDE: {len(df_filtered)}")
     st.dataframe(df_filtered)
-
-
     c1, = st.columns(1)
     fig = px.bar(df_filtered, x= 'status', color='esfera')
     c1.plotly_chart(fig)
-    btn = st.sidebar.button('Executar')
-    if btn:
-        print(f"status in ({status_escolhidos})")
+
 asyncio.run(main())
