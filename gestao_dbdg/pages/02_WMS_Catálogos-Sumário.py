@@ -19,17 +19,17 @@ def container_content(container, wms_capa = None):
 async def summary_wms_capabilities(placeholder, wms_capabilities_catalogo_inde: WMSCapabilities):
     
     try:
-        await wms_capabilities.execute_request()
-        st.session_state.qtd_camadas += wms_capabilities.qtd_camadas
-        st.session_state.qtd_camadas_sem_metadados += wms_capabilities.qtd_camadas_sem_metadados
-        st.session_state.qtd_camadas_sem_resumo += wms_capabilities.qtd_camadas_sem_resumo
+        await wms_capabilities_catalogo_inde.execute_request()
+        st.session_state.qtd_camadas += wms_capabilities_catalogo_inde.qtd_camadas
+        st.session_state.qtd_camadas_sem_metadados += wms_capabilities_catalogo_inde.qtd_camadas_sem_metadados
+        st.session_state.qtd_camadas_sem_resumo += wms_capabilities_catalogo_inde.qtd_camadas_sem_resumo
 
     except Exception as exc:
         st.session_state.qtd_catalogos += st.session_state.incremento_catalogos
-        print(f"falha em: {wms_capabilities.descricao}")
+        print(f"falha em: {wms_capabilities_catalogo_inde.descricao}")
         print(f"falha: {exc}")
-        wms_capabilities.failed = True
-        st.session_state.falhas.append(wms_capabilities.descricao)
+        wms_capabilities_catalogo_inde.failed = True
+        st.session_state.falhas.append(wms_capabilities_catalogo_inde.descricao)
     finally:
         st.session_state.qtd_catalogos += st.session_state.incremento_catalogos
         st.session_state.qtd_total_catalogos_processados += 1
@@ -38,7 +38,7 @@ async def summary_wms_capabilities(placeholder, wms_capabilities_catalogo_inde: 
             st.session_state.qtd_catalogos = 1.0
         placeholder.empty()
         container = placeholder.container()
-        container_content(container, wms_capabilities)
+        container_content(container, wms_capabilities_catalogo_inde)
 
 
 async def create_content(lista_descricao_sigla_url: list[tuple[str,str]], descricoes_escolhidas: list[str]) -> None:

@@ -94,7 +94,7 @@ async def main():
         f"Atores capacitados: {len(df_filtered['instituicao'].unique())}. Quantidade total de participantes: {sum(df_filtered['treinados'])}")
     st.dataframe(df_filtered, use_container_width=True)
     st.write(" ")
-    st.write("Atores capacitados por ano")
+    st.write("Quantidade de capacitados por ano")
     df1: pd.DataFrame = df_filtered
     #df1['quantidade_treinado'] = 0
     df_ano_qtd = df_filtered.groupby('ano')['treinados'].sum()
