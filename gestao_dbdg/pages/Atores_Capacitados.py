@@ -56,6 +56,7 @@ async def get_dataframe_atores_representantes_capacitados(conn: duckdb.DuckDBPyC
             """
     conn.execute(sql)
     df: pd.DataFrame = conn.df()
+    print(df.info())
     return df
 
 async def get_dataframe_atores_capacitados_por_ano(conn: duckdb.DuckDBPyConnection) -> pd.DataFrame:
@@ -90,6 +91,7 @@ async def main():
     esferas_escolhidas = esferas
     options_esfera = st.sidebar.multiselect('-----', esferas, esferas_escolhidas)
     df_filtered = df_ator_rep.query(f"esfera in ({options_esfera})")
+    #df_filtered['ano'] = df_filtered['ano'].str.replace(',', '').astype('int')
     st.write(
         f"Atores capacitados: {len(df_filtered['instituicao'].unique())}. Quantidade total de participantes: {sum(df_filtered['treinados'])}")
     st.dataframe(df_filtered, use_container_width=True)

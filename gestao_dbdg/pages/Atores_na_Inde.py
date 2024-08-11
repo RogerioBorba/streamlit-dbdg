@@ -3,7 +3,7 @@ import streamlit as st
 import duckdb
 import pandas as pd
 import plotly.express as px
-
+import time
 
 def query_atores_aderentes_na_inde():
     sql: str = """
@@ -132,9 +132,21 @@ async def main():
     fig2 = px.bar(df1,x='ano_adesao', color='esfera')
     c2.plotly_chart(fig2)
 
-    c3, = st.columns(1)
-    fig3 = px.bar(df1, x='esfera', color='modalidade', labels={"value": "nome"})
-    c3.plotly_chart(fig3)
+    df1["ano"] = df1["data_adesao"].dt.strftime("%Y")
+    anos = df1["ano"].unique()
+    anos = sorted(anos)
+    years = []
+    with st.empty():
+        for ano in anos:
+            years.append(ano)
+            dfq = df1.query("ano in @years")
+            fig_pie_modalidade = px.pie(dfq, names='esfera', title= f"Esfera - {ano}")
+            st.plotly_chart(fig_pie_modalidade)
+            time.sleep(2)
+
+    c3,= st.columns(1)
+    fig_pie_modalidade = px.pie(df1, names='modalidade', title="Modalidade")
+    c3.plotly_chart(fig_pie_modalidade)
     conn.close()
 
 asyncio.run(main())
