@@ -112,8 +112,9 @@ async def main():
     options_status = st.sidebar.multiselect('-----', status, status_escolhidos)
     options_esfera = st.sidebar.multiselect('-----', esferas, esferas_escolhidas)
     options_modalidade = st.sidebar.multiselect('-----', modalidades, modalidades)
+    df_filtered = df.query(f"status in ({options_status}) and esfera in ({options_esfera})")
     if options_status:
-        df_filtered = df.query(f"status in ({options_status}) and esfera in ({options_esfera})")
+        df_filtered = df_filtered.query(f"status in ({options_status}) and esfera in ({options_esfera})")
     if options_modalidade:
         print(f"options_modalidade changed: {options_modalidade}")
         df_filtered = df_filtered.query(f"modalidade in ({options_modalidade})")
@@ -126,6 +127,7 @@ async def main():
 
 
     df1: pd.DataFrame = await get_dataframe_atores_aderentes(conn)
+    df1 = df1.query(f"status in ({options_status}) and esfera in ({options_esfera}) and modalidade in ({options_modalidade})")
     st.write(f"Total de instituições aderentes na INDE: {len(df1)}")
     st.dataframe(df1)
     c2, = st.columns(1)
