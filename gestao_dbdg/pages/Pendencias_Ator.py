@@ -4,6 +4,11 @@ import duckdb
 import pandas as pd
 
 
+def highlight_nulls(row):
+    if pd.isna(row['data_fim']):
+        return ['background-color: red; color: white'] * len(row)
+    return [''] * len(row)
+
 async def get_dataframe() -> pd.DataFrame:
     conn = duckdb.connect()
     sql: str = """
@@ -21,9 +26,13 @@ async def get_dataframe() -> pd.DataFrame:
 async def main():
     st.set_page_config(page_title="Pendências do Ator", page_icon="favicon.ico", layout="wide")
     #options = st.sidebar.multiselect('-----', descricoes, descricoes_escolhidas)
-    st.text("Pendências do ator")
     df: pd.DataFrame = await get_dataframe()
-    st.dataframe(df)
+    agree = st.sidebar.checkbox("Somente pendências abertas")
+    df_filtered = df.query("data_fim.isna()") if agree else df
+    st.text(f"Pendências do ator: {len(df_filtered)}")
+    styled_df = df_filtered.style.apply(highlight_nulls, axis=1)
+    st.dataframe(styled_df)
+
     btn = st.sidebar.button('Executar')
     if btn:
         pass

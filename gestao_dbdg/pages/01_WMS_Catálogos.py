@@ -105,11 +105,13 @@ async def main():
     header = st.sidebar.header("Instituições")
     selecionar_todas = st.sidebar.checkbox('Selecionar todas instituições')
     if selecionar_todas:
+        btn = st.sidebar.button('Executar')
         descricoes_escolhidas = descricoes
     options = st.sidebar.multiselect('-----', descricoes, descricoes_escolhidas)
     
     url_preenchida = st.sidebar.text_input("Ou informe um URL")
-    btn = st.sidebar.button('Executar')
+    if not selecionar_todas:
+        btn = st.sidebar.button('Executar')
     if btn:
         if url_preenchida:
             await create_column(url_preenchida)

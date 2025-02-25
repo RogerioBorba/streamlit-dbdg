@@ -1,0 +1,2 @@
+[server]
+maxMessageSize = 500  # Define o limite para 500 MB (ou o valor desejado)
