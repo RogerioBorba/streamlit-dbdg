@@ -81,8 +81,10 @@ async def main():
     selecionar_todas = st.sidebar.checkbox('Selecionar todas instituições')
     if selecionar_todas:
         descricoes_escolhidas = descricoes
+        btn = st.sidebar.button('Executar')
     options = st.sidebar.multiselect('-----', descricoes, descricoes_escolhidas)
-    btn = st.sidebar.button('Executar')
+    if not selecionar_todas:
+        btn = st.sidebar.button('Executar')
     if btn:
        await create_content(list_descricao_sigla_url, options)
        

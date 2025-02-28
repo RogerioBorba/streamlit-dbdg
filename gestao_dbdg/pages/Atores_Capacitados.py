@@ -70,6 +70,7 @@ async def get_dataframe_atores_capacitados_por_ano(conn: duckdb.DuckDBPyConnecti
     df: pd.DataFrame = conn.df()
     return df
 
+
 async def get_dataframe_turmas_por_ano(conn: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     sql: str = """
             SELECT YEAR(dat_inicio) as 'ano', count(*) as 'qtd_turma' 
