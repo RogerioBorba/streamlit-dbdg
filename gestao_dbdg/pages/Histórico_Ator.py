@@ -28,8 +28,11 @@ class HitoricoAtor:
 
     async def get_dataframe(self) -> pd.DataFrame:
         sql: str = """
-                SELECT * EXCLUDE (arq_historico)
-                FROM '.\\data\\historico_ator.parquet' AS historico
+                SELECT ator.dsc_sigla, historico.* EXCLUDE (historico.arq_historico) 
+                FROM '.\\data\\historico_ator.parquet' AS historico,
+                     '.\\data\\ator.parquet' AS ator
+                WHERE ator.id_ator = historico.id_ator
+                
                 """
         self.conn.execute(sql)
         df: pd.DataFrame = self.conn.df()
